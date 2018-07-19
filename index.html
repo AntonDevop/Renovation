@@ -1,0 +1,265 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My App</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, minimal-ui">
+    <link rel="stylesheet" href="app.min.css">
+    <style>
+      .output {
+        color: red;
+        font-size: 150%;
+      }
+      #wallpaperSection, #tilesSection {
+        display: none;
+      }
+    </style>
+    <link rel="stylesheet" href="bootstrap.min.css">
+  </head>
+
+  <body>
+
+    <div class="app-page" data-page="home">
+      <div class="app-topbar">
+        <div class="app-title">Materials calculator</div>
+      </div>
+      <div class="app-content">
+        <div class="app-section">
+<!-- Selector of material ↓  -->
+          <div class="alert alert-light" role="alert">
+            <p class="text-center">To start please choose a type of material you need to calculate:</p>
+
+            <p class="text-center"><label><input type="radio" name="typeOfMaterial" value="wallpaperSection"> Wallpaper</label>
+            <label><input type="radio" name="typeOfMaterial" value="tilesSection"> Tile</label></p>
+          </div>
+<!-- Selector of material ↑  -->
+
+<!-- WALLPAPERS SECTION ↓  -->
+          <div id="wallpaperSection">
+            <div class="alert alert-info" role="alert">
+              <p class="text-center">Below you need to enter parameters of a room you need to renovate:</p>
+            </div>
+
+            <div class="app-button green" id="savedroom">Saved room</div>
+
+            <input type="app-input" class="app-input" id="rlength" placeholder="Length in cm">
+            <input type="app-input" class="app-input" id="rwidth" placeholder="Width in cm">
+            <input type="app-input" class="app-input" id="rheight" placeholder="Height in cm">
+
+            <p class="text-center"><label id="saveroomLabel"><input type="checkbox" id="saveroom"> Save this room</label></p>
+
+            <div class="alert alert-info" role="alert">
+              <p class="text-center">Now enter specs of wallpaper:</p>
+            </div>
+
+            <input type="app-input" class="app-input" id="width" placeholder="Width of the roll in cm">
+            <input type="app-input" class="app-input" id="length" placeholder="Length of the roll in meters">
+            <input type="app-input" class="app-input" id="price" placeholder="Price of unit">
+
+            <div class="app-button green" id="calculate">Calculate</div>
+
+            <div class="alert alert-success" role="alert">
+              <p class="text-center" id="result"></p>
+            </div>
+        </div>
+<!-- WALLPAPERS SECTION ↑  -->
+
+<!-- TILES SECTION ↓  -->
+        <div id="tilesSection">
+          <div class="alert alert-info" role="alert">
+            <p class="text-center">Below you need to enter parameters of a place:</p>
+          </div>
+
+          <div class="app-button green" id="savedplace">Saved place</div>
+
+          <input type="app-input" class="app-input" id="alength" placeholder="Length in cm">
+          <input type="app-input" class="app-input" id="awidth" placeholder="Width in cm">
+
+          <p class="text-center"><label id="saveplaceLabel"><input type="checkbox" id="saveplace"> Save this place</label></p>
+
+          <div class="alert alert-info" role="alert">
+            <p class="text-center">Now enter tiles specs:</p>
+          </div>
+
+          <input type="app-input" class="app-input" id="twidth" placeholder="Width of the tile in cm">
+          <input type="app-input" class="app-input" id="tlength" placeholder="Length of the tile in cm">
+          <input type="app-input" class="app-input" id="tprice" placeholder="Price of package">
+          <input type="app-input" class="app-input" id="tiles" placeholder="Tiles in package">
+
+          <div class="app-button green" id="calculateTiles">Calculate</div>
+
+          <div class="alert alert-success" role="alert">
+            <p class="text-center" id="resultTiles"></p>
+          </div>
+        </div>
+<!-- TILES SECTION ↑  -->
+
+          <div class="app-button" data-target="about">About</div>
+        </div>
+      </div>
+    </div>
+
+
+
+    <div class="app-page" data-page="about">
+      <div class="app-topbar">
+        <div class="app-button left" data-back data-autotitle></div>
+        <div class="app-title">About App</div>
+      </div>
+      <div class="app-content">
+
+        <div class="app-section">
+          <div class="alert alert-secondary" role="alert">
+            <p class="text-center">This app was developed by Anton Devop. More about me you can find at antondevop.com</p>
+          </div>
+
+        </div>
+      </div>
+
+
+    <script src="zepto.js"></script>
+    <script src="app.min.js"></script>
+    <script src="bootstrap.min.js"></script>
+    <script>
+      "use strict";
+      App.controller('home', function (page) {
+
+      });
+
+      App.controller('about', function (page) {
+
+      });
+
+      try {
+        App.restore();
+      } catch (err) {
+        App.load('home');
+      }
+
+// Swithcer to show appropriate section based on radio button choosen
+      $('input[type=radio][name=typeOfMaterial]').change(function() {
+          if (this.value == 'wallpaperSection') {
+              $("#wallpaperSection").css("display", "block");
+              $("#tilesSection").css("display", "none");
+          }
+          else if (this.value == 'tilesSection') {
+              $("#tilesSection").css("display", "block");
+              $("#wallpaperSection").css("display", "none");
+          }
+      });
+
+//  CALCULATING WALLPAPERS ↓
+      //using parameters of room saved in localStorage by clicking on Saved room button
+      $("#savedroom").click(function() {
+        // checking if there is something in localStorage
+        if(!localStorage.rlength) {
+          $("#savedroom").html("There is nothing saved to use");
+        } else {
+          //inserting stored values to inputs
+          $("#rlength").val(localStorage.rlength);
+          $("#rwidth").val(localStorage.rwidth);
+          $("#rheight").val(localStorage.rheight);
+        }
+      });
+
+      $("#calculate").click(function() {
+
+          // getting room parameters as integers
+          var rlength = parseInt($("#rlength").val());
+          var rwidth = parseInt($("#rwidth").val());
+          var rheight = parseInt($("#rheight").val());
+
+          // saving room if checkbox is selected
+          if ($("#saveroom").is(':checked')) {
+            //checking if localStorage is supported
+            if (typeof(Storage) !== "undefined") {
+                localStorage.rlength = rlength;
+                localStorage.rwidth = rwidth;
+                localStorage.rheight = rheight;
+            } else {
+                $("#saveroomLabel").html("Sorry, this functionallity is not supported on your device");
+            }
+          }
+
+          // getting walpaper parameters as integers
+          var length = parseInt($("#length").val());
+          var width = parseInt($("#width").val());
+          var price = parseInt($("#price").val());
+
+          // calculating number of strips of Wallpaper
+          var strips = Math.floor((rlength + rwidth) * 2 / width)+1;
+
+          // calculating required total length of wallpaper
+          var meters = (strips * rheight) / 100;
+
+          // calculating required total number of wallpaper rolls
+          var numberOfRolls = Math.floor(meters / length) + 1;
+
+          // calculating total square meters of the room
+          var sqrmeters = Math.round(((rlength + rwidth) * 2 * rheight * 0.0001) * 100) / 100;
+
+          // calculating total cost
+          var cost = numberOfRolls * price;
+
+          $("#result").html("You need <b class='output'>" + numberOfRolls + "</b> rolls to cover <b class='output'>" + sqrmeters + "</b> square meters of walls. \n Total cost is <b class='output'>" + cost + "</b>");
+        });
+
+//  CALCULATING WALLPAPERS ↑
+
+//  CALCULATING TILES ↓
+//using parameters of place saved in localStorage by clicking on Saved place button
+  $("#savedplace").click(function() {
+    // checking if there is something in localStorage
+    if(!localStorage.rlength) {
+      $("#savedplace").html("There is nothing saved to use");
+    } else {
+      //inserting stored values to inputs
+      $("#alength").val(localStorage.alength);
+      $("#awidth").val(localStorage.awidth);
+    }
+  });
+
+
+$("#calculateTiles").click(function() {
+
+    // getting area parameters as integers
+    var alength = parseInt($("#alength").val());
+    var awidth = parseInt($("#awidth").val());
+
+    // saving place if checkbox is selected
+    if ($("#saveplace").is(':checked')) {
+      //checking if localStorage is supported
+      if (typeof(Storage) !== "undefined") {
+          localStorage.alength = alength;
+          localStorage.awidth = awidth;
+      } else {
+          $("#saveplaceLabel").html("Sorry, this functionallity is not supported on your device");
+      }
+    }
+
+    // getting tiles parameters as integers
+    var length = parseInt($("#tlength").val());
+    var width = parseInt($("#twidth").val());
+    var price = parseInt($("#tprice").val());
+    var tilesInPack = parseInt($("#tiles").val());
+
+    // calculating number of tiles horizontally
+    var tilesHorizontal = Math.floor(alength / length) + 1;
+
+    // calculating number of tiles vertically
+    var tilesVertical = Math.floor(awidth / width) + 1;
+
+    // calculating required total number of tiles
+    var totalTiles = tilesHorizontal * tilesVertical;
+
+    // calculating total square meters of the room
+    var sqrmeters = alength * awidth * 0.0001;
+
+    // calculating total cost
+    var cost = (Math.floor(totalTiles / tilesInPack) + 1) * price;
+
+    $("#resultTiles").html("You need <b class='output'>" + totalTiles + "</b> tiles to cover <b class='output'>" + sqrmeters + "</b> square meters. \n Total cost is <b class='output'>" + cost + "</b>");
+  });
+//  CALCULATING TILES ↑
+    </script>
+  </body>
+</html>
