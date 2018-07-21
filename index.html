@@ -254,8 +254,18 @@ $("#calculateTiles").click(function() {
     // calculating total square meters of the room
     var sqrmeters = alength * awidth * 0.0001;
 
+    // packs required
+    var numberOfPacks = totalTiles / tilesInPack;
+
+    // if result of deviding is less than 1 means one pack is requried
+    if (numberOfPacks < 1) {
+      numberOfPacks = 1;
+    // else get wahtever result of devision and round it to the next integer (just in case, to have insurance stock of tiles)
+    } else {
+      numberOfPacks = Math.floor(numberOfPacks + 1);
+    }
     // calculating total cost
-    var cost = (Math.floor(totalTiles / tilesInPack) + 1) * price;
+    var cost = numberOfPacks * price;
 
     $("#resultTiles").html("You need <b class='output'>" + totalTiles + "</b> tiles to cover <b class='output'>" + sqrmeters + "</b> square meters. \n Total cost is <b class='output'>" + cost + "</b>");
   });
